@@ -25,3 +25,7 @@ video {
   text-align: center;
   margin: 0 auto;
 }
+
+.tabs{
+  background-color: blue;
+}
