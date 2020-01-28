@@ -1,21 +1,22 @@
 import React from "react";
-import { Link } from "@reach/router";
-import DashBoard from "./Dashboard";
 
-function Login() {
+function Login(props) {
+  const { handleLogin } = props;
+
+  const handleClick = (e) => {
+    e.preventDefault()
+    handleLogin(true);
+  };
+
   return (
-    <form className="login">
+    <form onSubmit={handleClick}>
       <label>
-        {" "}
-        Username: <input type="text"></input>
+        Username <input type="text" id="username" required></input>
       </label>
       <label>
-        {" "}
-        Password: <input type="password"></input>
+        Password <input type="password" id="password" required></input>
       </label>
-      <Link to="/home">
-        <button onClick={<DashBoard />}>Login</button>
-      </Link>
+      <button type="submit">Enter</button>
     </form>
   );
 }

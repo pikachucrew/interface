@@ -1,23 +1,24 @@
-import React from 'react';
-import './App.css';
-import Header from "./Components/Header"
-import Camera from "./Components/Camera"
-import Tabs from "./Components/Tabs"
-import {Link} from "@reach/router"
+import React, { Component } from "react";
+import Header from "./Components/Header";
+import Login from "./Components/Login";
+import DashBoard from "./Components/Dashboard";
 
+export default class App extends Component {
+  state = {
+    loggedIn: false
+  };
 
-function App() {
-  return (
-    <div className="App">
-      <Header/>
-      <a href = "settings.html">
-         <div id = "postButton">
-           <h2>Settings</h2>
-         </div>
-         </a>
-      <Camera />
-    </div>
-  );
+  handleLogin = bool => {
+    this.setState({ loggedIn: bool });
+  };
+  render() {
+    const { loggedIn } = this.state;
+    return (
+      <div className="App">
+        <Header />
+        {!loggedIn && <Login handleLogin={this.handleLogin} />}
+        {loggedIn && <DashBoard handleLogin={this.handleLogin} />}
+      </div>
+    );
+  }
 }
-
-export default App;
