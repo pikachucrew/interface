@@ -15,6 +15,7 @@ detector = FER()
 
 while True:
   webcam = cv2.VideoCapture(0)
+  time.sleep(3)
   check, frame = webcam.read()
   print(check)
   cv2.imwrite('captured_img.jpg', frame)
