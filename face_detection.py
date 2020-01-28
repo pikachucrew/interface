@@ -6,6 +6,18 @@ import json
 from fer import FER
 import tensorflow as tf
 import time 
+import sqlite3
+
+
+def insert_row(row):
+    with conn:
+        c.execute("INSERT INTO user_emotions VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                  (row["emotions"]["angry"], row["emotions"]["disgust"], row["emotions"]["fear"], row["emotions"]["happy"], row["emotions"]["sad"], row["emotions"]["surprise"], row["emotions"]["neutral"], row["timestamp"]))
+
+
+def get_rows():
+    c.execute("SELECT * FROM user_emotions")
+    return c.fetchall()
 
 tf.ConfigProto = tf.compat.v1.ConfigProto
 tf.Session = tf.compat.v1.Session
@@ -14,6 +26,8 @@ detector = FER()
 
 
 while True:
+  conn = sqlite3.connect(os.getcwd() + '/DataBase/db/test-table.db')
+  c = conn.cursor()
   webcam = cv2.VideoCapture(0)
   check, frame = webcam.read()
   print(check)
@@ -46,20 +60,32 @@ while True:
     cv2.rectangle(img_copy, (x, y), (x+w, y+h), (0, 255, 0), 2)
 
   detector_output = detector.detect_emotions(img_copy)
+  
 
-
-  output_dict = {"face_present": "", "emotions": {}}
 
   if len(faces_rects) > 0:
-    output_dict["face_present"] = True
-    output_dict["emotions"] = str(detector_output[0]["emotions"])
+    for emotion in detector_output[0]["emotions"]:
+     detector_output[0]["emotions"][emotion] = int(detector_output[0]["emotions"][emotion].item() * 100)
+    output_dict = {"emotions": detector_output[0]["emotions"], "timestamp": time.ctime(time.time())}
+  else: 
+    output_dict = {"emotions": {"angry": 0, 'disgust': 0, 'fear': 0,
+                                'happy': 0, 'sad': 0, 'surprise': 0, 'neutral': 0}, "timestamp": time.ctime(time.time())}
+
+
+  #print(output_dict["emotions"])
+  insert_row(output_dict)
+
+  #if len(faces_rects) > 0:
+    #output_dict["face_present"] = True
+    #output_dict["emotions"] = str(detector_output[0]["emotions"])
 
   #json_string = json.dumps(output_dict)
 
-  with open('json_file.json', 'w') as f:
-    json.dump(output_dict, f)
+  #with open('json_file.json', 'w') as f:
+    #json.dump(output_dict, f)
 
-  print("File written")
+  print(get_rows())
+  conn.close()
 
   time.sleep(5.0)
 
