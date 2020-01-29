@@ -1,6 +1,6 @@
 from flask import Flask
 from flask import request
-import detect_faces from face_detection
+from face_detection import detect_faces
 import os
 import json
 import sqlite3
@@ -25,6 +25,7 @@ def facial(username):
     if request.method == 'POST':
         data = json.dumps(request.get_json())
         detect_faces(data)
+        return "Data added"
         # print(request.get_json())
         # data = request.get_json()
         # insert_rows(data)
