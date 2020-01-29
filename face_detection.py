@@ -13,7 +13,14 @@ import base64
 def insert_row(row):
     with conn:
         c.execute("INSERT INTO user_emotions VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-                  (row["emotions"]["angry"], row["emotions"]["disgust"], row["emotions"]["fear"], row["emotions"]["happy"], row["emotions"]["sad"], row["emotions"]["surprise"], row["emotions"]["neutral"], row["timestamp"]))
+        (row["emotions"]["angry"], 
+         row["emotions"]["disgust"], 
+         row["emotions"]["fear"], 
+         row["emotions"]["happy"], 
+         row["emotions"]["sad"], 
+         row["emotions"]["surprise"], 
+         row["emotions"]["neutral"], 
+         row["timestamp"]))
 
 
 def get_rows():
@@ -68,8 +75,8 @@ def detect_faces(data):
 
     if len(faces_rects) > 0:
       for emotion in detector_output[0]["emotions"]:
-      detector_output[0]["emotions"][emotion] = int(detector_output[0]["emotions"][emotion].item() * 100)
-      output_dict = {"emotions": detector_output[0]["emotions"], "timestamp": time.ctime(time.time())}
+       detector_output[0]["emotions"][emotion] = int(detector_output[0]["emotions"][emotion].item() * 100)
+       output_dict = {"emotions": detector_output[0]["emotions"], "timestamp": time.ctime(time.time())}
     else: 
       output_dict = {"emotions": {"angry": 0, 'disgust': 0, 'fear': 0,
                                   'happy': 0, 'sad': 0, 'surprise': 0, 'neutral': 0}, "timestamp": time.ctime(time.time())}
@@ -91,8 +98,6 @@ def detect_faces(data):
     conn.close()
 
     time.sleep(5.0)
-
-
 
 
 
