@@ -7,39 +7,52 @@ from fer import FER
 import tensorflow as tf
 import time 
 import sqlite3
-
-
-def insert_row(row):
-    with conn:
-        c.execute("INSERT INTO user_emotions VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-                  (row["emotions"]["angry"], row["emotions"]["disgust"], row["emotions"]["fear"], row["emotions"]["happy"], row["emotions"]["sad"], row["emotions"]["surprise"], row["emotions"]["neutral"], row["timestamp"]))
-
-
-def get_rows():
-    c.execute("SELECT * FROM user_emotions")
-    return c.fetchall()
+import base64
 
 tf.ConfigProto = tf.compat.v1.ConfigProto
 tf.Session = tf.compat.v1.Session
 
-detector = FER()
 
-
-while True:
+def detect_faces(data):
+  #while True:
+  detector = FER()
   conn = sqlite3.connect(os.getcwd() + '/DataBase/db/test-table.db')
   c = conn.cursor()
-  webcam = cv2.VideoCapture(0)
-  check, frame = webcam.read()
-  print(check)
-  cv2.imwrite('captured_img.jpg', frame)
-  webcam.release()
-  # assigns image to variable img
-  img = cv2.imread('captured_img.jpg')
 
-  img_copy = img.copy()
+  def insert_row(row):
+    with conn:
+      c.execute("INSERT INTO user_emotions VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                (row["emotions"]["angry"],
+                  row["emotions"]["disgust"],
+                    row["emotions"]["fear"],
+                    row["emotions"]["happy"],
+                    row["emotions"]["sad"],
+                    row["emotions"]["surprise"],
+                    row["emotions"]["neutral"],
+                    row["timestamp"]))
+  def get_rows():
+    c.execute("SELECT * FROM user_emotions")
+    return c.fetchall()
+    # webcam = cv2.VideoCapture(0)
+    # check, frame = webcam.read()
+    # print(check)
+    # cv2.imwrite('captured_img.jpg', frame)
+    # webcam.release()
+    # assigns image to variable img
+    # img = cv2.imread('captured_img.jpg')
+
+    # img_copy = img.copy()
+
+  decoded_img = base64.b64decode(data)
+  filename =  'decoded_img.jpg'
+  with open(filename, 'wb') as f:
+    f.write(decoded_img)
+
+  img = cv2.imread('decoded_img.jpg')
+
 
   #converts img to grayscale
-  img_gray = cv2.cvtColor(img_copy, cv2.COLOR_BGR2GRAY)
+  img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
   #function that should convert back into colour when invoked, isn't currently working
   def convertToRGB(image):
@@ -57,16 +70,16 @@ while True:
 
   #draws rectangle around face
   for (x,y,w,h) in faces_rects:
-    cv2.rectangle(img_copy, (x, y), (x+w, y+h), (0, 255, 0), 2)
+    cv2.rectangle(img, (x, y), (x+w, y+h), (0, 255, 0), 2)
 
-  detector_output = detector.detect_emotions(img_copy)
+  detector_output = detector.detect_emotions(img)
   
 
 
   if len(faces_rects) > 0:
     for emotion in detector_output[0]["emotions"]:
-     detector_output[0]["emotions"][emotion] = int(detector_output[0]["emotions"][emotion].item() * 100)
-    output_dict = {"emotions": detector_output[0]["emotions"], "timestamp": time.ctime(time.time())}
+      detector_output[0]["emotions"][emotion] = int(detector_output[0]["emotions"][emotion].item() * 100)
+      output_dict = {"emotions": detector_output[0]["emotions"], "timestamp": time.ctime(time.time())}
   else: 
     output_dict = {"emotions": {"angry": 0, 'disgust': 0, 'fear': 0,
                                 'happy': 0, 'sad': 0, 'surprise': 0, 'neutral': 0}, "timestamp": time.ctime(time.time())}
@@ -86,10 +99,7 @@ while True:
 
   print(get_rows())
   conn.close()
-
-  time.sleep(5.0)
-
-
+  os.remove('decoded_img.jpg')
 
 
 

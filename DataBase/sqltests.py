@@ -4,39 +4,41 @@ import os
 
 # os.getcwd() + 'DataBase/db/test-table.db'
 
-conn = sqlite3.connect(os.getcwd() + '/DataBase/db/test-table.db')
+conn = sqlite3.connect('db/test-table.db')
 
 #creates the database in RAM, allowing for a fresh database to be created every time the file is run - useful for testing
 # conn = sqlite3.connect(':memory:')
 
 c = conn.cursor()
 
-c.execute("""CREATE TABLE user_emotions (
-    angry integer,
-    disgust integer,
-    fear integer,
-    happy integer,
-    sad integer,
-    surprise integer,
-    neutral integer,
-    timestamp text
-)""")
+# c.execute("""CREATE TABLE user_emotions (
+#     angry integer,
+#     disgust integer,
+#     fear integer,
+#     happy integer,
+#     sad integer,
+#     surprise integer,
+#     neutral integer,
+#     timestamp text
+# )""")
 
 
-def insert_row(row):
+def insert_row():
     with conn:
-        c.execute("INSERT INTO user_emotions VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-                  (row.emotions.angry, row.emotions.disgust, row.emotions.fear, row.emotions.happy, row.emotions.sad, row.emotions.surprise, row.emotions.neutral, row.timestamp))
+        c.execute("INSERT INTO user_emotions VALUES (5, 10, 15, 20, 25, 30, 35, 'now')")
 
 def get_rows():
-    c.execute("SELECT * FROM user_mood")
+    c.execute("SELECT * FROM user_emotions")
     return c.fetchall()
+
+
+# insert_row()
 
 #example of delete function
 #def remove_hour(hour):
     #with conn:
        # c.execute("DELETE from user_mood WHERE timestamp = :timestamp", {'timestamp': hour.timestamp})
-
+print(get_rows())
 
 
 
