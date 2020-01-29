@@ -9,8 +9,8 @@ import time
 import sqlite3
 import base64
 
-tf.ConfigProto = tf.compat.v1.ConfigProto
-tf.Session = tf.compat.v1.Session
+#tf.ConfigProto = tf.compat.v1.ConfigProto
+#tf.Session = tf.compat.v1.Session
 
 
 def detect_faces(data):
