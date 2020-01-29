@@ -23,7 +23,8 @@ def facial(username):
         return (json.dumps(get_rows()), 200)
 
     if request.method == 'POST':
-        detect_faces()
+        data = json.dumps(request.get_json())
+        detect_faces(data)
         # print(request.get_json())
         # data = request.get_json()
         # insert_rows(data)

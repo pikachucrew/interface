@@ -7,6 +7,7 @@ from fer import FER
 import tensorflow as tf
 import time 
 import sqlite3
+import base64
 
 
 def insert_row(row):
@@ -24,22 +25,24 @@ tf.Session = tf.compat.v1.Session
 
 detector = FER()
 
-def detect_faces():
+def detect_faces(data):
   while True:
     conn = sqlite3.connect(os.getcwd() + '/DataBase/db/test-table.db')
     c = conn.cursor()
-    webcam = cv2.VideoCapture(0)
-    check, frame = webcam.read()
-    print(check)
-    cv2.imwrite('captured_img.jpg', frame)
-    webcam.release()
+    # webcam = cv2.VideoCapture(0)
+    # check, frame = webcam.read()
+    # print(check)
+    # cv2.imwrite('captured_img.jpg', frame)
+    # webcam.release()
     # assigns image to variable img
-    img = cv2.imread('captured_img.jpg')
+    # img = cv2.imread('captured_img.jpg')
 
-    img_copy = img.copy()
+    # img_copy = img.copy()
+
+    img = base64.b64decode(data)
 
     #converts img to grayscale
-    img_gray = cv2.cvtColor(img_copy, cv2.COLOR_BGR2GRAY)
+    img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
     #function that should convert back into colour when invoked, isn't currently working
     def convertToRGB(image):
