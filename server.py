@@ -2,9 +2,10 @@ from flask import Flask
 from flask import request
 import json
 import sqlite3
+from flask_cors import CORS
 
 server = Flask(__name__)
-
+CORS(server)
 
 
 @server.route('/<username>', methods = ['GET', 'POST'])
