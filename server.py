@@ -24,7 +24,8 @@ def facial(username):
     if request.method == 'POST':
         data = request.get_json()
         insert_rows(data)
-        return "Data added"
+        conn.commit()
+        return (json.dumps(get_rows()), 200)
     conn.close()
 
 
