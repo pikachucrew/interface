@@ -11,16 +11,16 @@ conn = sqlite3.connect('test-table.db')
 
 c = conn.cursor()
 
-c.execute("""CREATE TABLE user_emotions (
-    neutral integer,
-    happy integer,
-    sad integer,
-    angry integer,
-    fearful integer,
-    disgusted integer,
-    surprised integer,
-    timestamp text
-)""")
+# c.execute("""CREATE TABLE user_emotions (
+#     neutral integer,
+#     happy integer,
+#     sad integer,
+#     angry integer,
+#     fearful integer,
+#     disgusted integer,
+#     surprised integer,
+#     timestamp text
+# )""")
 
 
 # def insert_row():
