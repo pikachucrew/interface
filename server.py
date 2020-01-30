@@ -17,7 +17,7 @@ def facial(username):
         return c.fetchall()
     def insert_rows(data):
         c.execute("INSERT INTO user_emotions VALUES (?, ?, ?, ?, ?, ?, ?, ?)", 
-        (data['angry'], data['disgust'], data['fear'], data['happy'], data['sad'], data['surprise'], data['neutral'], data['timestamp']))
+        (data['neutral'], data['happy'], data['sad'], data['angry'], data['fearful'], data['disgusted'], data['surprised'], data['timestamp']))
     if request.method == 'GET':
         return (json.dumps(get_rows()), 200)
 
